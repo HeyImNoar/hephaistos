@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+  <OutputType>WinExe</OutputType>
+  <TargetFramework>net10.0-windows</TargetFramework>
+  <ImplicitUsings>enable</ImplicitUsings>
+  <Nullable>enable</Nullable>
+  <UseWPF>true</UseWPF>
+  <ApplicationIcon>Assets\hephaistos.ico</ApplicationIcon>
+  <AssemblyName>Hephaistos</AssemblyName>
+  <Product>Héphaïstos</Product>
+  <Title>Héphaïstos</Title>
+  <Version>4.0.0-rc.1</Version>
+  <AssemblyVersion>4.0.0.0</AssemblyVersion>
+  <FileVersion>4.0.0.0</FileVersion>
+  <InformationalVersion>4.0.0-rc.1</InformationalVersion>
+</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PdfPig" Version="0.1.15" />
+    <PackageReference Include="PDFtoImage" Version="5.3.0" />
+    <PackageReference Include="TesseractOCR" Version="5.5.2" />
+  </ItemGroup>
+
+<ItemGroup>
+  <None Update="tessdata\fra.traineddata">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+  </None>
+</ItemGroup>
+
+
+<ItemGroup>
+  <Resource Include="Assets\hephaistos-logo.png" />
+  <Resource Include="Assets\hephaistos.ico" />
+</ItemGroup>
+
+</Project>

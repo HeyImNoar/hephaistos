@@ -1,0 +1,232 @@
+﻿<Window x:Class="Hephaistos.AiSetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Configuration de l’IA locale — Héphaïstos"
+        Icon="Assets/hephaistos.ico"
+        Width="610"
+        Height="510"
+        MinWidth="560"
+        MinHeight="470"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#F6F7F5"
+        Foreground="#30403D"
+        FontFamily="Segoe UI"
+        FontSize="13">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="AccentBrush" Color="#B56F4A"/>
+        <SolidColorBrush x:Key="AccentHoverBrush" Color="#A96240"/>
+        <SolidColorBrush x:Key="InkBrush" Color="#30403D"/>
+        <SolidColorBrush x:Key="MutedBrush" Color="#6F7B78"/>
+        <SolidColorBrush x:Key="LineBrush" Color="#DDE2DF"/>
+        <SolidColorBrush x:Key="HealthSoftBrush" Color="#EDF2EF"/>
+
+        <Style x:Key="SetupButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Chrome"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="9"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="#F2F4F2"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimarySetupButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource SetupButtonStyle}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Chrome"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="9"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{StaticResource AccentHoverBrush}"/>
+                                <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource AccentHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
+            <Border Width="58"
+                    Height="58"
+                    Margin="0,0,14,0"
+                    Padding="2"
+                    Background="White"
+                    BorderBrush="{StaticResource LineBrush}"
+                    BorderThickness="1"
+                    CornerRadius="16">
+                <Image Source="Assets/hephaistos-logo.png"
+                       Stretch="Uniform"/>
+            </Border>
+
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="IA locale"
+                           FontSize="22"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource InkBrush}"/>
+                <TextBlock x:Name="SetupSubtitleTextBlock"
+                           Text="Configuration du moteur d’Héphaïstos"
+                           Margin="0,2,0,0"
+                           Foreground="{StaticResource MutedBrush}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Border Grid.Row="1"
+                Margin="0,20,0,0"
+                Padding="16,14"
+                Background="White"
+                BorderBrush="{StaticResource LineBrush}"
+                BorderThickness="1"
+                CornerRadius="14">
+            <StackPanel>
+                <TextBlock x:Name="SetupIntroTitleTextBlock"
+                           Text="Héphaïstos fait fonctionner son intelligence artificielle sur cet ordinateur."
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"/>
+                <TextBlock x:Name="SetupIntroBodyTextBlock"
+                           Margin="0,7,0,0"
+                           Foreground="{StaticResource MutedBrush}"
+                           TextWrapping="Wrap">
+                    Lors de la première configuration, Héphaïstos peut installer Ollama puis télécharger les deux modèles nécessaires. Les modèles représentent environ 5,8 Go de téléchargement. Vos documents restent traités localement et ne sont pas envoyés à un service d’IA distant.
+                </TextBlock>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2"
+                Margin="0,14,0,0"
+                Padding="14,12"
+                Background="{StaticResource HealthSoftBrush}"
+                BorderBrush="#E1E7E3"
+                BorderThickness="1"
+                CornerRadius="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Ellipse x:Name="StatusDot"
+                         Width="9"
+                         Height="9"
+                         Margin="0,3,10,0"
+                         VerticalAlignment="Top"
+                         Fill="#9AA7A2"/>
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock x:Name="StatusTextBlock"
+                               Text="Vérification…"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"/>
+                    <TextBlock x:Name="StatusDetailsTextBlock"
+                               Margin="0,3,0,0"
+                               Foreground="{StaticResource MutedBrush}"
+                               FontSize="11.5"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="3"
+                    Margin="0,18,0,0"
+                    VerticalAlignment="Top">
+            <ProgressBar x:Name="SetupProgressBar"
+                         Height="7"
+                         Minimum="0"
+                         Maximum="100"
+                         Value="0"
+                         Foreground="{StaticResource AccentBrush}"
+                         Background="#DDE4E0"
+                         BorderThickness="0"
+                         Visibility="Collapsed"/>
+
+            <TextBlock x:Name="ProgressTextBlock"
+                       Margin="0,8,0,0"
+                       MinHeight="36"
+                       Foreground="{StaticResource MutedBrush}"
+                       FontSize="11.5"
+                       TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <Grid Grid.Row="4"
+              Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="FooterHintTextBlock"
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource MutedBrush}"
+                       FontSize="11"
+                       Text="Une connexion Internet n’est nécessaire que pour installer le moteur et télécharger les modèles."/>
+
+            <Button x:Name="LaterButton"
+                    Grid.Column="1"
+                    Margin="12,0,8,0"
+                    Style="{StaticResource SetupButtonStyle}"
+                    Content="Plus tard"
+                    Click="LaterButton_Click"/>
+
+            <Button x:Name="ConfigureButton"
+                    Grid.Column="2"
+                    Style="{StaticResource PrimarySetupButtonStyle}"
+                    Content="Configurer maintenant"
+                    Click="ConfigureButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>
