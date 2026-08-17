@@ -1,17 +1,17 @@
 #define MyAppName "Héphaïstos"
-#define MyAppVersion "4.0.0 RC1"
+#define MyAppVersion "1.1 Beta"
 #define MyAppExeName "Hephaistos.exe"
 #define MyAppPublisher "Héphaïstos"
 #define MyAppId "Hephaistos.Desktop"
-#define MyPortableDir "dist\Hephaistos-V4-RC1-Windows-x64"
+#define MyPortableDir "dist\Hephaistos-Beta-1.1-Windows-x64"
 
 [Setup]
 AppId={#MyAppId}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppVerName={#MyAppName} V4 RC1
+AppVerName={#MyAppName} Beta 1.1
 AppPublisher={#MyAppPublisher}
-VersionInfoVersion=4.0.0.0
+VersionInfoVersion=1.1.0.0
 VersionInfoProductName={#MyAppName}
 VersionInfoDescription=Installateur de {#MyAppName}
 VersionInfoCompany={#MyAppPublisher}
@@ -25,7 +25,7 @@ WizardStyle=modern
 SetupIconFile=Assets\hephaistos.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 OutputDir=dist\installer
-OutputBaseFilename=Hephaistos-V4-RC1-Windows-x64-Installer
+OutputBaseFilename=Hephaistos-Beta-1.1-Windows-x64-Installer
 Compression=lzma2/max
 SolidCompression=yes
 SetupLogging=yes

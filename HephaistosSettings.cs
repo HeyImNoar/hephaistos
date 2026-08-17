@@ -3,7 +3,7 @@ namespace Hephaistos;
 public static class HephaistosSettings
 {
     public const string DisplayVersion =
-        "beta 1.0";
+        "beta 1.1";
 
     public const int IndexFormatVersion = 1;
 

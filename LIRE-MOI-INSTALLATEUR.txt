@@ -1,0 +1,42 @@
+HEPHAISTOS BETA 1.1 - INSTALLATEUR WINDOWS x64
+=============================================
+
+POUR FABRIQUER L'INSTALLATEUR
+
+1. Placez tous les fichiers de ce patch a la racine du projet Hephaistos.
+2. Double-cliquez sur :
+
+   creer-installeur-windows-x64.bat
+
+3. Le script :
+   - publie Hephaistos en Windows x64 autonome ;
+   - installe Inno Setup 7 sur le PC de developpement si necessaire ;
+   - fabrique un unique installateur .exe.
+
+RESULTAT
+
+   dist\installer\Hephaistos-Beta-1.1-Windows-x64-Installer.exe
+
+C'est CE fichier qu'il faut transmettre a l'utilisateur final.
+
+COTE UTILISATEUR
+
+- double-clic sur l'installateur ;
+- installation sans PowerShell et sans SDK .NET ;
+- raccourci Menu Demarrer ;
+- raccourci Bureau propose ;
+- lancement d'Hephaistos a la fin ;
+- si l'IA locale manque, Hephaistos impose ensuite sa fenetre de configuration.
+
+DONNEES
+
+La desinstallation retire les fichiers du programme, mais ne supprime pas
+automatiquement les donnees locales d'Hephaistos dans LocalAppData
+(index et preference de theme). Cela evite de supprimer silencieusement
+des donnees de travail lors d'une mise a jour/desinstallation accidentelle.
+
+SIGNATURE WINDOWS
+
+Cette RC n'est pas signee avec un certificat Authenticode. Windows peut donc
+afficher "Editeur inconnu" ou SmartScreen. Une signature de code pourra etre
+ajoutee pour une distribution publique.

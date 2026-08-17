@@ -2,7 +2,7 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 
-set "LABEL=V4-RC1"
+set "LABEL=Beta-1.1"
 set "ISS=Installer\Hephaistos.iss"
 set "PORTABLE=dist\Hephaistos-%LABEL%-Windows-x64"
 set "INSTALLERDIR=dist\installer"
@@ -10,7 +10,7 @@ set "INSTALLER=%INSTALLERDIR%\Hephaistos-%LABEL%-Windows-x64-Installer.exe"
 
 cls
 echo ==============================================
-echo   HEPHAISTOS V4 RC1 - CREATION INSTALLATEUR
+echo   HEPHAISTOS BETA 1.1 - CREATION INSTALLATEUR
 echo ==============================================
 echo.
 echo Dossier du projet : %CD%
@@ -127,7 +127,7 @@ echo L'utilisateur n'a qu'a double-cliquer sur ce fichier.
 echo Hephaistos sera installe dans son profil Windows, avec raccourci
 echo menu Demarrer et raccourci Bureau si l'option est conservee.
 echo.
-echo IMPORTANT : cet installateur RC1 n'est pas signe avec un certificat
+echo IMPORTANT : cet installateur Beta 1.1 n'est pas signe avec un certificat
 echo Authenticode. Windows peut donc afficher "Editeur inconnu" / SmartScreen.
 echo Cela n'empeche pas le test fonctionnel.
 echo.

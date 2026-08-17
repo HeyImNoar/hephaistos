@@ -55,14 +55,12 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Border Width="92"
-                        Height="92"
+            <StackPanel Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top">
+                <Border Width="94"
+                        Height="94"
+                        HorizontalAlignment="Center"
                         CornerRadius="22"
                         Background="{DynamicResource SplashSurfaceBrush}"
                         BorderBrush="{DynamicResource SplashLineBrush}"
@@ -72,10 +70,10 @@
                            Stretch="Uniform"/>
                 </Border>
 
-                <StackPanel Grid.Column="1"
-                            Margin="22,8,0,0"
-                            VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="0,13,0,0"
+                            HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center">
                         <TextBlock Text="Héphaïstos"
                                    FontFamily="Segoe UI Semibold"
                                    FontSize="27"
@@ -86,7 +84,7 @@
                                 CornerRadius="8"
                                 Background="{DynamicResource SplashTrackBrush}">
                             <TextBlock x:Name="VersionTextBlock"
-                                       Text="beta 1.0"
+                                       Text="beta 1.1"
                                        FontFamily="Segoe UI Semibold"
                                        FontSize="11"
                                        Foreground="{DynamicResource SplashMutedBrush}"/>
@@ -95,9 +93,10 @@
                     <TextBlock Text="Analyse documentaire locale"
                                Margin="0,5,0,0"
                                FontSize="13"
-                               Foreground="{DynamicResource SplashMutedBrush}"/>
+                               Foreground="{DynamicResource SplashMutedBrush}"
+                               HorizontalAlignment="Center"/>
                 </StackPanel>
-            </Grid>
+            </StackPanel>
 
             <StackPanel Grid.Row="1"
                         VerticalAlignment="Center"

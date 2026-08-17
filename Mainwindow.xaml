@@ -397,46 +397,48 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0"
-                        Orientation="Horizontal"
                         VerticalAlignment="Center">
-                <Border Width="60"
-                        Height="60"
-                        Margin="0,0,13,0"
-                        Padding="2"
-                        Background="{DynamicResource SurfaceBrush}"
-                        BorderBrush="{DynamicResource LineBrush}"
-                        BorderThickness="1"
-                        CornerRadius="17">
-                    <Image Source="Assets/hephaistos-logo.png"
-                           Stretch="Uniform"/>
-                </Border>
-
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Héphaïstos"
-                               FontSize="24"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource InkBrush}"/>
-                    <TextBlock Text="Analyse documentaire locale"
-                               Margin="0,2,0,0"
-                               FontSize="12.5"
-                               Foreground="{DynamicResource MutedBrush}"/>
-                    <TextBlock Margin="0,4,0,0"
-                               FontSize="10.5"
-                               Foreground="{DynamicResource MutedBrush}">
-                        <Run x:Name="VersionRun" Text="beta 1.0"/>
-                        <Run Text=" · créé par "/>
-                        <Hyperlink Foreground="{DynamicResource AccentBrush}"
-                                   ToolTip="Un petit mot"
-                                   Click="CreditLink_Click">Noa</Hyperlink>
-                    </TextBlock>
-                </StackPanel>
+                <TextBlock Text="Héphaïstos"
+                           FontSize="24"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource InkBrush}"/>
+                <TextBlock Text="Analyse documentaire locale"
+                           Margin="0,2,0,0"
+                           FontSize="12.5"
+                           Foreground="{DynamicResource MutedBrush}"/>
+                <TextBlock Margin="0,4,0,0"
+                           FontSize="10.5"
+                           Foreground="{DynamicResource MutedBrush}">
+                    <Run x:Name="VersionRun" Text="beta 1.1"/>
+                    <Run Text=" · créé par "/>
+                    <Run Text="Noa"
+                         Foreground="{DynamicResource AccentBrush}"/>
+                </TextBlock>
             </StackPanel>
 
-            <StackPanel Grid.Column="1"
+            <!-- Logo centré dans l’en-tête -->
+            <Border Grid.Column="1"
+                    Width="60"
+                    Height="60"
+                    Margin="16,0"
+                    Padding="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource LineBrush}"
+                    BorderThickness="1"
+                    CornerRadius="17">
+                <Image Source="Assets/hephaistos-logo.png"
+                       Stretch="Uniform"/>
+            </Border>
+
+            <StackPanel Grid.Column="2"
                         Orientation="Horizontal"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Center">
                 <Button x:Name="ThemeToggleButton"
                         Style="{StaticResource ButtonBaseStyle}"

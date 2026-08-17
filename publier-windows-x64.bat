@@ -9,7 +9,7 @@ cd /d "%~dp0"
 
 set "APPNAME=Hephaistos"
 set "RID=win-x64"
-set "LABEL=V4-RC1"
+set "LABEL=Beta-1.1"
 set "DISTROOT=%CD%\dist"
 set "OUTDIR=%DISTROOT%\Hephaistos-%LABEL%-Windows-x64"
 set "ZIPFILE=%DISTROOT%\Hephaistos-%LABEL%-Windows-x64.zip"
@@ -18,7 +18,7 @@ set "TESSFILE=%TESSDIR%\fra.traineddata"
 
 cls
 echo ==============================================
-echo   HEPHAISTOS V4 RC1 - WINDOWS x64
+echo   HEPHAISTOS BETA 1.1 - WINDOWS x64
 echo ==============================================
 echo.
 echo Dossier du projet : %CD%
@@ -72,7 +72,7 @@ if not exist "%TESSFILE%" (
 echo Modele OCR : OK
 
 echo.
-echo Nettoyage de l'ancienne distribution RC1...
+echo Nettoyage de l'ancienne distribution Beta 1.1...
 if exist "%OUTDIR%" rmdir /s /q "%OUTDIR%"
 if exist "%ZIPFILE%" del /q "%ZIPFILE%"
 if not exist "%DISTROOT%" mkdir "%DISTROOT%"
@@ -126,7 +126,7 @@ if not exist "%OUTDIR%\tessdata\fra.traineddata" (
 )
 
 echo.
-echo Creation du ZIP RC1...
+echo Creation du ZIP Beta 1.1...
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$ErrorActionPreference='Stop'; Compress-Archive -Path '%OUTDIR%\*' -DestinationPath '%ZIPFILE%' -CompressionLevel Optimal -Force"
 if errorlevel 1 (
@@ -141,7 +141,7 @@ if errorlevel 1 (
 
 echo.
 echo ==============================================
-echo   HEPHAISTOS V4 RC1 CREE AVEC SUCCES
+echo   HEPHAISTOS BETA 1.1 CREE AVEC SUCCES
 echo ==============================================
 echo.
 echo Dossier :
