@@ -38,7 +38,6 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<AnalysisHistoryItem> _extractionHistory = [];
     private readonly ObservableCollection<AnalysisHistoryItem> _comparisonHistory = [];
     private readonly ObservableCollection<AnalysisHistoryItem> _contradictionHistory = [];
-    private readonly ObservableCollection<AnalysisHistoryItem> _diagnosticHistory = [];
     private readonly List<string> _loadedPdfPaths = [];
     private readonly Dictionary<string, string> _documentPathsByName =
         new(StringComparer.OrdinalIgnoreCase);
@@ -70,7 +69,6 @@ public partial class MainWindow : Window
         ExtractionHistoryComboBox.ItemsSource = _extractionHistory;
         ComparisonHistoryComboBox.ItemsSource = _comparisonHistory;
         ContradictionHistoryComboBox.ItemsSource = _contradictionHistory;
-        DiagnosticHistoryComboBox.ItemsSource = _diagnosticHistory;
 
         var httpHandler =
     new HttpClientHandler
@@ -85,7 +83,10 @@ public partial class MainWindow : Window
 _http =
     new HttpClient(
         httpHandler
-    );
+    )
+    {
+        Timeout = Timeout.InfiniteTimeSpan
+    };
 
         // --------------------------------------------------
         // OCR
@@ -236,7 +237,45 @@ _http =
         return HephaistosSettings.DisplayVersion;
     }
 
-    private void ThemeToggleButton_Click(
+    private void OpenLogsButton_Click(
+    object sender,
+    RoutedEventArgs e
+)
+{
+    try
+    {
+        var logDirectory =
+            Path.GetDirectoryName(
+                LogService.LogFilePath
+            );
+
+        if (string.IsNullOrWhiteSpace(logDirectory))
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(logDirectory);
+
+        Process.Start(
+            new ProcessStartInfo
+            {
+                FileName = logDirectory,
+                UseShellExecute = true
+            }
+        );
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(
+            $"Impossible d'ouvrir le dossier des logs.\n\n{ex.Message}",
+            "Héphaïstos",
+            MessageBoxButton.OK,
+            MessageBoxImage.Warning
+        );
+    }
+}
+
+private void ThemeToggleButton_Click(
         object sender,
         RoutedEventArgs e
     )
@@ -2212,12 +2251,19 @@ private async void FolderSummaryButton_Click(
         StatusTextBlock.Text =
             "Synthèse du corpus terminée.";
     }
-    catch (OperationCanceledException)
-    {
-        StatusTextBlock.Text =
-            "Synthèse du corpus annulée.";
 
-    }
+catch (OperationCanceledException ex)
+{
+    StatusTextBlock.Text =
+        "La synthèse a été interrompue.";
+
+    MessageBox.Show(
+        $"La synthèse a été interrompue.\n\n{ex.Message}",
+        "Héphaïstos",
+        MessageBoxButton.OK,
+        MessageBoxImage.Warning
+    );
+}
     catch (Exception ex)
     {
         MessageBox.Show(
@@ -2943,201 +2989,7 @@ private void CancelButton_Click(
     _contradictionCancellation?.Cancel();
 }
 
-private async void ValidationButton_Click(
-    object sender,
-    RoutedEventArgs e
-)
-{
-    AnalysisTab.IsSelected = true;
-    DiagnosticAnalysisTab.IsSelected = true;
-    if (_chunks.Count == 0)
-    {
-        return;
-    }
 
-    if (string.IsNullOrWhiteSpace(_currentFolderPath))
-    {
-        return;
-    }
-
-    try
-    {
-        SetBusy(
-            true,
-            "Validation de la recherche..."
-        );
-
-        SourcesListBox.ItemsSource =
-            null;
-
-        SourcePreviewTextBox.Clear();
-
-        var validationCases =
-            await _validationService
-                .LoadValidationCasesAsync(
-                    _currentFolderPath
-                );
-
-        if (validationCases.Count == 0)
-        {
-            MessageBox.Show(
-                "Le fichier de validation ne contient aucun test.",
-                "Hephaïstos",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
-            );
-
-            return;
-        }
-
-        var results =
-            await _validationService.RunAsync(
-                _chunks,
-                validationCases,
-                topK: 5
-            );
-
-        var total =
-            results.Count;
-
-        var top1 =
-            results.Count(
-                result =>
-                    result.Rank == 1
-            );
-
-        var top3 =
-            results.Count(
-                result =>
-                    result.Rank.HasValue &&
-                    result.Rank.Value <= 3
-            );
-
-        var top5 =
-            results.Count(
-                result =>
-                    result.Success
-            );
-
-        var report =
-            new System.Text.StringBuilder();
-
-        report.AppendLine(
-            "VALIDATION DE LA RECHERCHE"
-        );
-
-        report.AppendLine(
-            "============================"
-        );
-
-        report.AppendLine();
-
-        report.AppendLine(
-            $"Tests : {total}"
-        );
-
-        report.AppendLine(
-            $"Bonne page en position 1 : {top1}/{total}"
-        );
-
-        report.AppendLine(
-            $"Bonne page dans le Top 3 : {top3}/{total}"
-        );
-
-        report.AppendLine(
-            $"Bonne page dans le Top 5 : {top5}/{total}"
-        );
-
-        report.AppendLine();
-
-        foreach (var result in results)
-        {
-            if (result.Success)
-            {
-                report.AppendLine(
-                    $"✓ {result.Question}"
-                );
-
-                report.AppendLine(
-                    $"  Attendu : " +
-                    $"{result.ExpectedDocument}, " +
-                    $"p. {result.ExpectedPage}"
-                );
-
-                report.AppendLine(
-                    $"  Trouvé en position {result.Rank}"
-                );
-            }
-            else
-            {
-                report.AppendLine(
-                    $"✗ {result.Question}"
-                );
-
-                report.AppendLine(
-                    $"  Attendu : " +
-                    $"{result.ExpectedDocument}, " +
-                    $"p. {result.ExpectedPage}"
-                );
-
-                report.AppendLine(
-                    "  Résultats obtenus :"
-                );
-
-                foreach (
-                    var source in result.RetrievedSources
-                )
-                {
-                    report.AppendLine(
-                        $"  - {source}"
-                    );
-                }
-            }
-
-            report.AppendLine();
-        }
-
-        AddAnalysisHistory(
-            _diagnosticHistory,
-            DiagnosticHistoryComboBox,
-            DiagnosticTextBox,
-            "Test recherche",
-            report.ToString()
-        );
-
-        StatusTextBlock.Text =
-            $"Validation terminée : {top5}/{total} réussis.";
-    }
-    catch (FileNotFoundException)
-    {
-        MessageBox.Show(
-            "Le fichier hephaistos.validation.json " +
-            "n'a pas été trouvé dans le dossier sélectionné.",
-            "Hephaïstos",
-            MessageBoxButton.OK,
-            MessageBoxImage.Warning
-        );
-
-        StatusTextBlock.Text =
-            "Fichier de validation introuvable.";
-    }
-    catch (Exception ex)
-    {
-        MessageBox.Show(
-            ex.Message,
-            "Erreur Hephaïstos",
-            MessageBoxButton.OK,
-            MessageBoxImage.Error
-        );
-
-        StatusTextBlock.Text =
-            "Erreur pendant la validation.";
-    }
-    finally
-    {
-        SetBusy(false);
-    }
-}
 private void RemoveDocumentsButton_Click(
     object sender,
     RoutedEventArgs e
@@ -3265,10 +3117,6 @@ private void ContradictionHistoryComboBox_SelectionChanged(
     SelectionChangedEventArgs e
 ) => ShowSelectedAnalysis(ContradictionHistoryComboBox, ContradictionTextBox);
 
-private void DiagnosticHistoryComboBox_SelectionChanged(
-    object sender,
-    SelectionChangedEventArgs e
-) => ShowSelectedAnalysis(DiagnosticHistoryComboBox, DiagnosticTextBox);
 
 private void ClearAnalysisOutputs()
 {
@@ -3277,14 +3125,12 @@ private void ClearAnalysisOutputs()
     _extractionHistory.Clear();
     _comparisonHistory.Clear();
     _contradictionHistory.Clear();
-    _diagnosticHistory.Clear();
 
     SummaryTextBox.Clear();
     TimelineTextBox.Clear();
     ExtractionTextBox.Clear();
     ComparisonTextBox.Clear();
     ContradictionTextBox.Clear();
-    DiagnosticTextBox.Clear();
 }
 
 private bool HasAtLeastTwoDocuments()
@@ -3308,10 +3154,6 @@ private bool HasAtLeastTwoDocuments()
         QuestionTextBox.IsEnabled = hasDocuments;
         AskButton.IsEnabled = hasDocuments;
         FolderSummaryButton.IsEnabled = hasDocuments;
-
-        ValidationButton.IsEnabled =
-            hasDocuments &&
-            !string.IsNullOrWhiteSpace(_currentFolderPath);
 
         UpdateDocumentSelectionUi();
 
@@ -3340,11 +3182,6 @@ private bool HasAtLeastTwoDocuments()
 
         FolderSummaryButton.IsEnabled =
             !busy && hasDocuments;
-
-        ValidationButton.IsEnabled =
-            !busy &&
-            hasDocuments &&
-            !string.IsNullOrWhiteSpace(_currentFolderPath);
 
         QuestionTextBox.IsEnabled = hasDocuments;
         QuestionTextBox.IsReadOnly = busy;

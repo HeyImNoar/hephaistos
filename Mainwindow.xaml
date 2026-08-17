@@ -413,7 +413,7 @@
                 <TextBlock Margin="0,4,0,0"
                            FontSize="10.5"
                            Foreground="{DynamicResource MutedBrush}">
-                    <Run x:Name="VersionRun" Text="beta 1.1"/>
+                    <Run x:Name="VersionRun" Text="beta 1.2"/>
                     <Run Text=" · créé par "/>
                     <Run Text="Noa"
                          Foreground="{DynamicResource AccentBrush}"/>
@@ -459,6 +459,20 @@
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource InkBrush}"/>
                     </StackPanel>
+                </Button>
+
+                <Button x:Name="OpenLogsButton"
+                        Margin="8,0,0,0"
+                        Style="{StaticResource ButtonBaseStyle}"
+                        Padding="10,6"
+                        Background="{DynamicResource SoftSurfaceBrush}"
+                        BorderBrush="{DynamicResource LineBrush}"
+                        ToolTip="Ouvrir le dossier des journaux techniques"
+                        Click="OpenLogsButton_Click">
+                    <TextBlock Text="Logs"
+                               FontSize="11.5"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource InkBrush}"/>
                 </Button>
 
                 <Button x:Name="AiSetupButton"
@@ -1059,66 +1073,7 @@
                             </Grid>
                         </TabItem>
 
-                        <TabItem x:Name="DiagnosticAnalysisTab" Header="Diagnostic">
-                            <Grid Margin="8">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Button x:Name="ValidationButton"
-                                        Grid.Row="0"
-                                        Style="{StaticResource ButtonBaseStyle}"
-                                        HorizontalAlignment="Left"
-                                        Margin="0,0,0,10"
-                                        Content="Test recherche"
-                                        ToolTip="Diagnostic de la recherche documentaire"
-                                        IsEnabled="False"
-                                        Click="ValidationButton_Click"/>
-                                <Grid Grid.Row="1" Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Historique"
-                                               VerticalAlignment="Center"
-                                               Margin="2,0,10,0"
-                                               FontSize="11"
-                                               Foreground="{DynamicResource MutedBrush}"/>
-                                    <ComboBox x:Name="DiagnosticHistoryComboBox"
-                                              Grid.Column="1"
-                                              MinWidth="220"
-                                              Height="32"
-                                              Padding="8,3"
-                                              ItemContainerStyle="{StaticResource ThemedComboBoxItemStyle}"
-                                              DisplayMemberPath="DisplayLabel"
-                                              ToolTip="Retrouver les résultats précédents de cette analyse pendant la session"
-                                              SelectionChanged="DiagnosticHistoryComboBox_SelectionChanged">
-                                        <ComboBox.Style>
-                                            <Style TargetType="ComboBox" BasedOn="{StaticResource ThemedComboBoxStyle}">
-                                                <Setter Property="IsEnabled" Value="False"/>
-                                                <Style.Triggers>
-                                                    <Trigger Property="HasItems" Value="True">
-                                                        <Setter Property="IsEnabled" Value="True"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.Style>
-                                    </ComboBox>
-                                </Grid>
-                                <TextBox x:Name="DiagnosticTextBox"
-                                         Grid.Row="2"
-                                         Style="{StaticResource OutputTextBoxStyle}"
-                                         IsReadOnly="True"
-                                         Focusable="False"
-                                         IsTabStop="False"
-                                         Cursor="Arrow"
-                                         PreviewMouseLeftButtonDown="OutputTextBox_PreviewMouseLeftButtonDown"
-                                         AcceptsReturn="True"
-                                         TextWrapping="Wrap"
-                                         VerticalScrollBarVisibility="Auto"/>
-                            </Grid>
-                        </TabItem>
+
                     </TabControl>
                 </TabItem>
             </TabControl>

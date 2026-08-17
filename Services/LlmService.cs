@@ -1,8 +1,9 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using Hephaistos.Models;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace Hephaistos.Services;
 
@@ -71,25 +72,63 @@ public class LlmService
                     false
             };
 
-        using var response =
-            await _http.PostAsJsonAsync(
-                "http://localhost:11434/api/chat",
-                request,
-                cancellationToken
-            );
+        var stopwatch = Stopwatch.StartNew();
 
-        response.EnsureSuccessStatusCode();
+        LogService.Info(
+            $"OLLAMA CHAT START | model={HephaistosSettings.ChatModel} | promptChars={userPrompt.Length}"
+        );
 
-        var json =
-            await response.Content
-                .ReadFromJsonAsync<JsonElement>(
+        try
+        {
+            using var response =
+                await _http.PostAsJsonAsync(
+                    "http://localhost:11434/api/chat",
+                    request,
                     cancellationToken
                 );
 
-        return json
-            .GetProperty("message")
-            .GetProperty("content")
-            .GetString() ?? "";
+            response.EnsureSuccessStatusCode();
+
+            var json =
+                await response.Content
+                    .ReadFromJsonAsync<JsonElement>(
+                        cancellationToken
+                    );
+
+            var result =
+                json
+                    .GetProperty("message")
+                    .GetProperty("content")
+                    .GetString() ?? "";
+
+            stopwatch.Stop();
+
+            LogService.Info(
+                $"OLLAMA CHAT OK | durationMs={stopwatch.ElapsedMilliseconds} | responseChars={result.Length}"
+            );
+
+            return result;
+        }
+        catch (OperationCanceledException ex)
+        {
+            stopwatch.Stop();
+
+            LogService.Info(
+                $"OLLAMA CHAT CANCELLED | durationMs={stopwatch.ElapsedMilliseconds} | userCancellation={cancellationToken.IsCancellationRequested}"
+            );
+            LogService.Error("OLLAMA CHAT CANCELLED", ex);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+
+            LogService.Info(
+                $"OLLAMA CHAT FAILED | durationMs={stopwatch.ElapsedMilliseconds}"
+            );
+            LogService.Error("OLLAMA CHAT", ex);
+            throw;
+        }
     }
 
     public async Task<string> AnswerQuestionAsync(
@@ -200,4 +239,3 @@ public class LlmService
         );
     }
 }
-

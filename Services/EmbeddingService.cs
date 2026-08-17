@@ -1,14 +1,14 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Hephaistos;
 using System.Net.Http;
+using System.Diagnostics;
 
 namespace Hephaistos.Services;
 
 public class EmbeddingService
 {
     private readonly HttpClient _http;
-
 
     public EmbeddingService(HttpClient http)
     {
@@ -42,37 +42,83 @@ public class EmbeddingService
             input = texts
         };
 
-        var response = await _http.PostAsJsonAsync(
-            "http://localhost:11434/api/embed",
-            request,
-            cancellationToken
+        var totalChars = texts.Sum(text => text?.Length ?? 0);
+        var stopwatch = Stopwatch.StartNew();
+
+        LogService.Info(
+            $"OLLAMA EMBED START | model={HephaistosSettings.EmbeddingModel} | texts={texts.Count} | chars={totalChars}"
         );
 
-        response.EnsureSuccessStatusCode();
-
-        var json =
-            await response.Content.ReadFromJsonAsync<JsonElement>(
-                cancellationToken: cancellationToken
-            );
-
-        var embeddings = json
-            .GetProperty("embeddings")
-            .EnumerateArray()
-            .Select(vector =>
-                vector
-                    .EnumerateArray()
-                    .Select(value => value.GetSingle())
-                    .ToArray()
-            )
-            .ToList();
-
-        if (embeddings.Count != texts.Count)
+        try
         {
-            throw new Exception(
-                "Le nombre d'embeddings retourné ne correspond pas au nombre de textes."
+            using var response = await _http.PostAsJsonAsync(
+                "http://localhost:11434/api/embed",
+                request,
+                cancellationToken
             );
-        }
 
-        return embeddings;
+            response.EnsureSuccessStatusCode();
+
+            var json =
+                await response.Content.ReadFromJsonAsync<JsonElement>(
+                    cancellationToken: cancellationToken
+                );
+
+            var embeddings = json
+                .GetProperty("embeddings")
+                .EnumerateArray()
+                .Select(vector =>
+                    vector
+                        .EnumerateArray()
+                        .Select(value => value.GetSingle())
+                        .ToArray()
+                )
+                .ToList();
+
+            if (embeddings.Count != texts.Count)
+            {
+                throw new Exception(
+                    "Le nombre d'embeddings retourné ne correspond pas au nombre de textes."
+                );
+            }
+
+            stopwatch.Stop();
+
+            LogService.Info(
+                $"OLLAMA EMBED OK | durationMs={stopwatch.ElapsedMilliseconds} | embeddings={embeddings.Count}"
+            );
+
+            return embeddings;
+        }
+        catch (OperationCanceledException ex)
+        {
+            stopwatch.Stop();
+
+            LogService.Info(
+                $"OLLAMA EMBED CANCELLED | durationMs={stopwatch.ElapsedMilliseconds} | userCancellation={cancellationToken.IsCancellationRequested}"
+            );
+
+            LogService.Error(
+                "OLLAMA EMBED CANCELLED",
+                ex
+            );
+
+            throw;
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+
+            LogService.Info(
+                $"OLLAMA EMBED FAILED | durationMs={stopwatch.ElapsedMilliseconds}"
+            );
+
+            LogService.Error(
+                "OLLAMA EMBED",
+                ex
+            );
+
+            throw;
+        }
     }
 }
